@@ -3,6 +3,7 @@ import About from "@/pages/about/About";
 import { Login } from "@/pages/auth/Login";
 import { Register } from "@/pages/auth/Register";
 import Contact from "@/pages/contact/Contact";
+import Dashboard from "@/pages/dashboard/Dashboard";
 import Home from "@/pages/home/Home";
 import { createBrowserRouter } from "react-router";
 
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
    {
       path: '/register',
       Component: Register
+   },
+   {
+      path: '/dashboard',
+      Component: Dashboard
    }
 ])
 

@@ -3,6 +3,7 @@ import car from '@/assets/car.png'
 
 import { Button } from "@/components/ui/button";
 import SplitText from "@/components/ui/SplitText/SplitText";
+import { Link } from "react-router";
 
 
 const Banner = () => {
@@ -37,16 +38,18 @@ const Banner = () => {
                 threshold={0.1}
                 rootMargin="-100px"
                 textAlign="center"
-                // onLetterAnimationComplete={handleAnimationComplete}
+              // onLetterAnimationComplete={handleAnimationComplete}
               />
-              
+
             </h2>
             <p className="mx-auto max-w-3xl text-center text-muted-foreground md:text-lg">
               Your package is more than just a parcel to us—it’s a promise. We deliver it safely and on time, making sure you can trust us every step of the way.
             </p>
             <div className="flex flex-col items-center justify-center gap-3 pt-3 pb-12">
               <Button size="lg" variant={"outline"}>
-                Know More About Us
+                <Link to={"/"}>
+                  Book a Delivery
+                </Link>
               </Button>
             </div>
           </div>
