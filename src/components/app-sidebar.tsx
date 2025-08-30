@@ -4,6 +4,7 @@ import * as React from "react"
 import {
   Car,
   LayoutDashboard,
+  SendHorizontal,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -27,41 +28,56 @@ const data = {
   ],
   navMain: [
     {
-      title: "Manage Users",
-      url: "/",
+      title: "Admin Panel",
+      url: "/admin/dashboard",
       icon: LayoutDashboard,
       isActive: true,
       items: [
         {
-          title: "Users",
-          url: "/users",
+          title: "Overview",
+          url: '/admin/dashboard'
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Manage Users",
+          url: "/admin/dashboard/manage-users",
+        }
+      ],
+    },
+    {
+      title: "Receiver",
+      url: "",
+      icon: Car ,
+      items: [
+        {
+          title: "Receiver Overview",
+          url: "/receiver/dashboard",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "Incoming",
+          url: "/receiver/dashboard/incoming",
+        },
+        {
+          title: "Delivery History",
+          url: "/receiver/dashboard/history",
         },
       ],
     },
     {
-      title: "Parcels",
-      url: "#",
-      icon: Car,
+      title: "Sender",
+      url: "",
+      icon: SendHorizontal,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "Sender Overview",
+          url: "/sender/dashboard",
         },
         {
-          title: "Explorer",
-          url: "#",
+          title: "Create Parcel",
+          url: "create-parcel",
         },
         {
-          title: "Quantum",
-          url: "#",
+          title: "My Parcels",
+          url: "my-parcels",
         },
       ],
     }

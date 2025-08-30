@@ -5,7 +5,7 @@ import {
    SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Outlet } from "react-router"
-export default function Dashboard() {
+export default function ReceiverDashboard() {
    return (
       <SidebarProvider>
          <AppSidebar />

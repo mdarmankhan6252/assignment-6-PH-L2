@@ -19,7 +19,7 @@ const navigationLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/admin/dashboard", label: "Dashboard" },
 ]
 
 export default function Navbar() {
