@@ -11,10 +11,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Password from "@/components/ui/Password";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import toast from "react-hot-toast";
 
 const loginSchema = z
    .object({
@@ -27,7 +29,9 @@ export function Login({
    ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
 
-
+   const [login] = useLoginMutation();
+   const navigate = useNavigate();
+   
 
    const form = useForm<z.infer<typeof loginSchema>>({
       resolver: zodResolver(loginSchema),
@@ -38,12 +42,22 @@ export function Login({
    });
 
    const onSubmit = async (data: z.infer<typeof loginSchema>) => {
-      const userInfo = {
-         email: data.email,
-         password: data.password,
-      };
+      try {
+         const userInfo = {
+            email: data.email,
+            password: data.password,
+         };
 
-      console.log(userInfo);
+         const res = await login(userInfo).unwrap();
+         console.log(res);
+         toast.success(res.message || "User Login Successful!")
+         navigate('/');
+         form.reset();
+
+      } catch (error) {
+
+         console.log(error);
+      }
    };
 
    return (

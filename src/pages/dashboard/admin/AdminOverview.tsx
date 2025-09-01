@@ -1,3 +1,6 @@
+import type { IUser } from "@/interfaces/interfaces";
+import { useGetAllUsersQuery } from "@/redux/features/auth/auth.api";
+import Loading from "@/utils/Loading";
 import { Box, UsersRound } from "lucide-react";
 import { Chart } from "react-google-charts";
 
@@ -6,25 +9,46 @@ import { Chart } from "react-google-charts";
 
 const AdminOverview = () => {
 
-   const data = [
+   const { data, isLoading } = useGetAllUsersQuery(undefined);
+
+   if (isLoading) {
+      return <Loading />
+   }
+   console.log(data);
+
+   const users = data?.data || [];
+
+   const sendersCount = users.filter((u: IUser) => u.role === "SENDER").length;
+   const receiversCount = users.filter((u: IUser) => u.role === "RECEIVER").length;
+   const total = data?.data?.length;
+
+   const dataStatistic = [
       ["Element", "Parcel", { role: "style" }],
-      ["Senders", 100, "#242256"], // RGB value
-      ["Receivers", 210, "#36563d"], // English color name
-      ["Parcels", 300, "#daba45"],
-      ["Total Users", 233, "#b500a3"], // CSS-style declaration
+      ["Senders", sendersCount, "#242256"], // RGB value
+      ["Receivers", receiversCount, "#36563d"], // English color name
+      ["Parcels", 10, "#daba45"],
+      ["Total Users", total, "#b500a3"], // CSS-style declaration
    ];
 
    return (
       <div>
          <h2 className="font-semibold text-3xl pb-6">Dashboard Overview</h2>
          <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3  items-center justify-between max-w-4xl gap-6 ">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4  items-center justify-between max-w-5xl gap-6 ">
+               <div className="p-10 border border-pink-200 rounded-sm space-y-4 bg-gradient-to-b from-pink-50 ">
+                  <div className="bg-slate-50 p-3 border border-pink-200 text-pink-600 rounded-sm inline-flex">
+                     <UsersRound />
+                  </div>
+                  <h4 className="text-slate-700 text-lg">Admin</h4>
+                  <h2 className="text-4xl font-bold">{sendersCount}</h2>
+               </div>
+
                <div className="p-10 border border-blue-200 rounded-sm space-y-4 bg-gradient-to-b from-blue-50 ">
                   <div className="bg-slate-50 p-3 border border-blue-200 text-blue-600 rounded-sm inline-flex">
                      <UsersRound />
                   </div>
                   <h4 className="text-slate-700 text-lg">Senders</h4>
-                  <h2 className="text-4xl font-bold">3,421</h2>
+                  <h2 className="text-4xl font-bold">{sendersCount}</h2>
                </div>
 
                <div className="p-10 border border-green-200 rounded-sm space-y-4 bg-gradient-to-b from-green-50 ">
@@ -32,7 +56,7 @@ const AdminOverview = () => {
                      <UsersRound />
                   </div>
                   <h4 className="text-slate-700 text-lg">Receivers</h4>
-                  <h2 className="text-4xl font-bold">3,421</h2>
+                  <h2 className="text-4xl font-bold">{receiversCount}</h2>
                </div>
 
                <div className="p-10 border border-yellow-200 rounded-sm space-y-4 bg-gradient-to-b from-yellow-50 ">
@@ -44,8 +68,8 @@ const AdminOverview = () => {
                </div>
             </div>
 
-            <div className="border max-w-4xl">
-               <Chart chartType="ColumnChart" width="100%" height="100%" data={data} />
+            <div className="border max-w-2xl">
+               <Chart chartType="ColumnChart" width="100%" height="100%" data={dataStatistic} />
             </div>
 
          </div>

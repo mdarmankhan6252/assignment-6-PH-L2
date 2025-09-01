@@ -11,18 +11,44 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { authApi, useLogoutMutation, useUserInfoQuery } from "@/redux/features/auth/auth.api"
+import { useAppDispatch } from "@/redux/hook"
+import Loading from "@/utils/Loading"
 import Logo from "@/utils/Logo"
 import { Link } from "react-router"
 
 // Navigation links array to be used in both desktop and mobile menus
-const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/admin/dashboard", label: "Dashboard" },
-]
+
 
 export default function Navbar() {
+
+  const { data, isLoading } = useUserInfoQuery(undefined);
+  const [logout] = useLogoutMutation();
+  const dispatch = useAppDispatch();
+
+
+  if (isLoading) {
+    return <Loading />
+  }
+
+  const handleLogout = async () => {
+    await logout(undefined)
+    dispatch(authApi.util.resetApiState())
+  }
+
+  const dashboardRouteName = data?.data?.role?.toLowerCase() ;
+  console.log(dashboardRouteName);
+
+
+
+  const navigationLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+    ...(data?.data?.email ? [{ href: `/${dashboardRouteName}/dashboard`, label: "Dashboard" }] : [])
+  ]
+
+  console.log(data);
   return (
     <header className="border-b px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4 max-w-7xl mx-auto">
@@ -106,9 +132,15 @@ export default function Navbar() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button asChild size="sm" className="text-sm">
-            <Link to='/login'>Login</Link>
-          </Button>
+          {
+            data?.data?.email ? <Button onClick={handleLogout} variant={"secondary"} size="sm" className="text-sm bg-red-500 text-white hover:bg-red-600">
+              Logout
+            </Button>
+              :
+              <Button asChild size="sm" className="text-sm">
+                <Link to='/login'>Login</Link>
+              </Button>
+          }
         </div>
       </div>
     </header>

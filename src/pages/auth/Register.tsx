@@ -11,10 +11,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Password from "@/components/ui/Password";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 
 const registerSchema = z
    .object({
@@ -40,7 +44,9 @@ export function Register({
    ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
 
-
+   const [register] = useRegisterMutation();
+   const navigate = useNavigate();
+   const [loading, setLoading] = useState(false)
 
    const form = useForm<z.infer<typeof registerSchema>>({
       resolver: zodResolver(registerSchema),
@@ -53,13 +59,28 @@ export function Register({
    });
 
    const onSubmit = async (data: z.infer<typeof registerSchema>) => {
-      const userInfo = {
-         name: data.name,
-         email: data.email,
-         password: data.password,
-      };
+      setLoading(true)
+      try {
+         const userInfo = {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+         };
 
-      console.log(userInfo);
+         const res = await register(userInfo).unwrap();
+         console.log(res);
+
+         toast.success("User created Successfully");
+         navigate('/login')
+         form.reset()
+         setLoading(false)
+
+      } catch (error) {
+         setLoading(false)
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         const err = error as any;
+         toast.error(err.data.message || "Something went wrong!")
+      }
    };
 
    return (
@@ -143,8 +164,10 @@ export function Register({
                            </FormItem>
                         )}
                      />
-                     <Button type="submit" className="w-full">
-                        Submit
+                     <Button disabled={loading} type="submit" className="w-full">
+                        {
+                           loading ? <Loader className="animate-spin"/> : <span>Submit</span>
+                        }
                      </Button>
                   </form>
                </Form>
