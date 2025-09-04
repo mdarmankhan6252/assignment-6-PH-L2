@@ -1,14 +1,22 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import type { ReactNode } from "react";
+
+interface IProps {
+   children: ReactNode
+   onConfirm: () => void
+}
 
 
+const DeleteModal = ({ children, onConfirm }: IProps) => {
 
+   const handleConfirmDelete = () => {
+      onConfirm();
+   }
 
-const DeleteModal = () => {
    return (
       <AlertDialog>
          <AlertDialogTrigger asChild>
-            <Button variant="destructive" >Delete</Button>
+            {children}
          </AlertDialogTrigger>
          <AlertDialogContent>
             <AlertDialogHeader>
@@ -20,7 +28,7 @@ const DeleteModal = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
                <AlertDialogCancel>Cancel</AlertDialogCancel>
-               <AlertDialogAction>Continue</AlertDialogAction>
+               <AlertDialogAction onClick={handleConfirmDelete}>Continue</AlertDialogAction>
             </AlertDialogFooter>
          </AlertDialogContent>
       </AlertDialog>

@@ -2,17 +2,33 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { IUser } from "@/interfaces/interfaces";
 import DeleteModal from "@/modal/DeleteModal";
-import { useGetAllUsersQuery } from "@/redux/features/auth/auth.api";
+import { useGetAllUsersQuery, useRemoveUserMutation } from "@/redux/features/auth/auth.api";
 import Loading from "@/utils/Loading";
 import { BadgeCheck, BadgeX } from "lucide-react";
+import toast from "react-hot-toast";
 
 
 
 const ManageUsers = () => {
 
-   const { data, isLoading } = useGetAllUsersQuery(undefined);
+   const { data, isLoading, refetch } = useGetAllUsersQuery(undefined);
+   const [removeUser] = useRemoveUserMutation();
+
    if (isLoading) {
       return <Loading />
+   }
+
+   const handleDeleteUser = async (userId: string) => {
+      console.log(userId);
+      try {
+         const res = await removeUser(userId).unwrap();
+         toast.success(res.message);
+         refetch()
+
+         console.log(res);
+      } catch (error) {
+         console.log(error);
+      }
    }
 
 
@@ -45,14 +61,18 @@ const ManageUsers = () => {
                         <Button variant={"outline"} className="border-slate-300 border">Update Role</Button>
                      </TableCell>
                      <TableCell className="text-center">
-                        <DeleteModal />
+                        <DeleteModal onConfirm={() => handleDeleteUser(user._id)}>
+                           <Button variant={'destructive'}>
+                              Delete
+                           </Button>
+                        </DeleteModal>
                      </TableCell>
                   </TableRow>
                ))}
             </TableBody>
             <TableFooter>
                <TableRow>
-                  <TableCell colSpan={5}>Total Users</TableCell>
+                  <TableCell colSpan={6}>Total Users</TableCell>
                   <TableCell className="text-right pr-12">{data?.data?.length}</TableCell>
                </TableRow>
             </TableFooter>
