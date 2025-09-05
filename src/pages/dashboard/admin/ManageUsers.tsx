@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { IUser } from "@/interfaces/interfaces";
 import DeleteModal from "@/modal/DeleteModal";
+import UpdateRoleModal from "@/modal/UpdateRoleModal";
 import { useGetAllUsersQuery, useRemoveUserMutation } from "@/redux/features/auth/auth.api";
 import Loading from "@/utils/Loading";
 import { BadgeCheck, BadgeX } from "lucide-react";
@@ -31,6 +32,11 @@ const ManageUsers = () => {
       }
    }
 
+   const handleUpdateUserRole = async (id: string, role: string) => {
+      console.log(id, role);
+   }
+
+
 
    return (
       <div className="max-w-6xl">
@@ -58,7 +64,10 @@ const ManageUsers = () => {
                      <TableCell className="flex items-center justify-center">{user.isVerified ? <BadgeCheck className="text-blue-600" /> : <BadgeX className="text-red-500" />}</TableCell>
                      <TableCell>{user.role}</TableCell>
                      <TableCell className="text-center">
-                        <Button variant={"outline"} className="border-slate-300 border">Update Role</Button>
+                        <UpdateRoleModal
+                           userId={user._id}
+                           handleUpdateUserRole={handleUpdateUserRole}
+                           role={user.role} />
                      </TableCell>
                      <TableCell className="text-center">
                         <DeleteModal onConfirm={() => handleDeleteUser(user._id)}>
