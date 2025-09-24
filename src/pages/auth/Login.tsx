@@ -31,7 +31,7 @@ export function Login({
 
    const [login] = useLoginMutation();
    const navigate = useNavigate();
-   
+
 
    const form = useForm<z.infer<typeof loginSchema>>({
       resolver: zodResolver(loginSchema),
@@ -68,6 +68,11 @@ export function Login({
                <p className="text-sm text-muted-foreground">
                   Enter your details to login your account
                </p>
+
+               <div>
+                  <h3><span className="font-semibold">Email: </span>admin@gmail.com</h3>
+                  <h3><span className="font-semibold">Password: </span>Admin1234</h3>
+               </div>
             </div>
 
             <div className="grid gap-6">
@@ -82,7 +87,8 @@ export function Login({
                               <FormLabel>Email</FormLabel>
                               <FormControl>
                                  <Input
-                                    placeholder="john.doe@company.com"
+                                    
+                                    placeholder="your@gmail.com"
                                     type="email"
                                     {...field}
                                  />

@@ -49,6 +49,15 @@ export const authApi = baseApi.injectEndpoints({
             method: 'DELETE',
          }),
          invalidatesTags: ['USERS']
+      }),
+
+      updateUserRole: builder.mutation({
+         query: ({ userId, role }) => ({
+            url: `/user/${userId}`,
+            method: 'PATCH',
+            body: { role }
+         }),
+         invalidatesTags: ['USERS']
       })
 
    })
@@ -60,6 +69,7 @@ export const {
    useRegisterMutation,
    useUserInfoQuery,
    useGetAllUsersQuery,
-   useRemoveUserMutation
+   useRemoveUserMutation,
+   useUpdateUserRoleMutation
 
 } = authApi;

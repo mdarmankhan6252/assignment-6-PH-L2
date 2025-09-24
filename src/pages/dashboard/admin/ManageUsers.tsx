@@ -3,7 +3,7 @@ import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, Tabl
 import type { IUser } from "@/interfaces/interfaces";
 import DeleteModal from "@/modal/DeleteModal";
 import UpdateRoleModal from "@/modal/UpdateRoleModal";
-import { useGetAllUsersQuery, useRemoveUserMutation } from "@/redux/features/auth/auth.api";
+import { useGetAllUsersQuery, useRemoveUserMutation, useUpdateUserRoleMutation } from "@/redux/features/auth/auth.api";
 import Loading from "@/utils/Loading";
 import { BadgeCheck, BadgeX } from "lucide-react";
 import toast from "react-hot-toast";
@@ -14,6 +14,7 @@ const ManageUsers = () => {
 
    const { data, isLoading, refetch } = useGetAllUsersQuery(undefined);
    const [removeUser] = useRemoveUserMutation();
+   const [updateUserRole] = useUpdateUserRoleMutation();
 
    if (isLoading) {
       return <Loading />
@@ -33,7 +34,18 @@ const ManageUsers = () => {
    }
 
    const handleUpdateUserRole = async (id: string, role: string) => {
-      console.log(id, role);
+      try {
+         const response = await updateUserRole({ userId: id, role }).unwrap();
+
+         toast.success(response.message || "Role updated successfully!")
+         refetch();
+
+         console.log(response);
+
+      } catch (error) {
+         toast.error("Failed to update the role")
+         console.log(error);
+      }
    }
 
 
